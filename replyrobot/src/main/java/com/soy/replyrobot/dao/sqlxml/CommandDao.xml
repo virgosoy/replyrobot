@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.soy.replyrobot.dao.CommandDao">
+
+  <resultMap type="Command" id="Command">
+  	<id column="cid" property="id" />
+  	<result column="command" property="command" />
+  	<result column="description" property="description" />
+  	<collection property="contentList" resultMap="com.soy.replyrobot.dao.CommandContentDao.CommandContent" />
+  </resultMap>
+
+  <select id="queryCommandList" parameterType="Command" resultType="Command">
+    SELECT id,command,description FROM command 
+    <where>
+    	<if test="@com.soy.replyrobot.util.StringUtils@isNotEmpty(command)">
+    		command = #{command}
+    	</if>
+    	<if test="@com.soy.replyrobot.util.StringUtils@isNotEmpty(description)">
+    		AND description = #{description}
+    	</if>
+    </where>
+  </select>
+  
+  <select id="queryFullCommandById" parameterType="int" resultMap="Command">
+	SELECT a.id cid,a.command,a.description,
+		b.id,b.command_id,b.content
+	FROM command a 
+	LEFT JOIN command_content b
+	ON a.id = b.command_id
+	WHERE a.id = #{_parameter} 
+  </select>
+  
+  <insert id="addCommand" parameterType="Command">
+  	INSERT INTO command(command,description) VALUES(#{command},#{description})
+  </insert>
+  
+  <update id="update" parameterType="Command">
+  	UPDATE command SET command = #{command}, description = #{description} WHERE id = #{id} 
+  </update>
+  
+  <delete id="delete" parameterType="int[]">
+  	DELETE FROM command WHERE id IN (
+  	<foreach collection="array" separator="," item="item">
+  		#{item}
+  	</foreach>
+  	) 
+  </delete>
+  
+</mapper>
