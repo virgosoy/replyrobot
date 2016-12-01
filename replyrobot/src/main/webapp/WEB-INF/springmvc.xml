@@ -13,7 +13,15 @@
 	http://www.springframework.org/schema/tx 
 	http://www.springframework.org/schema/tx/spring-tx.xsd">
 
-	<mvc:annotation-driven />
+	<!-- mvc注解驱动 -->
+	<mvc:annotation-driven>
+		<mvc:message-converters>
+			<!-- 配置消息转换器，解决返回到页面的中文乱码 -->
+			<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+				<constructor-arg value="UTF-8" />
+			</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
 
 	<!-- 扫包 -->
 	<context:component-scan base-package="com.soy.replyrobot.web" />

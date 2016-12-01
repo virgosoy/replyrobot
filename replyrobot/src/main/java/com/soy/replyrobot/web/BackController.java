@@ -3,6 +3,7 @@ package com.soy.replyrobot.web;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -64,18 +65,30 @@ public class BackController {
 	 * @return 
 	 */
 	@RequestMapping("/update")
-	public String update(Command command,@RequestParam(value="ccid",defaultValue="") Integer[] contentIds,@RequestParam(value="content",defaultValue="") String[] contents){
-		//封装数据
+	public String update(Command command,@RequestParam(value="ccid",required=false) Integer[] contentIds,@RequestParam(value="content",required=false) String[] contents){
+		
 		List<CommandContent> contentList = new ArrayList<>();
-		CommandContent content = null;
-		for (int i = 0;i<contentIds.length; i++) {
-			content = new CommandContent();
-			content.setId(contentIds[i]);
-			content.setCommandId(command.getId());
-			content.setContent(contents[i]);
-			contentList.add(content);
-			System.out.println(content.getId()+":"+content.getContent());
+		
+		if(contentIds!=null && contents!=null){
+			//如果页面传递过来只有一个相同的name切value=""，那么数组的length==0。
+			if(contentIds.length==0){
+				contentIds = new Integer[]{null};
+			}
+			if(contents.length==0){
+				contents = new String[]{""};
+			}
+			//封装数据
+			CommandContent content = null;
+			for (int i = 0; i<contentIds.length; i++) {
+				content = new CommandContent();
+				content.setId(contentIds[i]);
+				content.setCommandId(command.getId());
+				content.setContent(contents[i]);
+				contentList.add(content);
+				System.out.println(content.getId()+":"+content.getContent());
+			}
 		}
+		
 		command.setContentList(contentList);
 		//进行更新
 		commandService.updateFullCommand(command);

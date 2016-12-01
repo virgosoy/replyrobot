@@ -18,7 +18,7 @@
     		command = #{command}
     	</if>
     	<if test="@com.soy.replyrobot.util.StringUtils@isNotEmpty(description)">
-    		AND description = #{description}
+    		AND description LIKE '%' #{description} '%'
     	</if>
     </where>
   </select>
@@ -30,6 +30,19 @@
 	LEFT JOIN command_content b
 	ON a.id = b.command_id
 	WHERE a.id = #{_parameter} 
+  </select>
+  
+  <select id="queryFullCommandByName" parameterType="String" resultMap="Command">
+	SELECT a.id cid,a.command,a.description,
+		b.id,b.command_id,b.content
+	FROM command a 
+	LEFT JOIN command_content b
+	ON a.id = b.command_id
+	WHERE a.id = (
+		SELECT id FROM command 
+		WHERE command = #{_parameter}
+		LIMIT 1 
+	)
   </select>
   
   <insert id="addCommand" parameterType="Command">

@@ -45,4 +45,12 @@ public interface CommandService {
 	 */
 	public boolean updateFullCommand(Command command);
 	
+	/**
+	 * <p>根据指令返回回复内容</p>
+	 * @author zhengsiyou
+	 * @param name 指令
+	 * @return 
+	 */
+	public String autoReply(String name);
+	
 }

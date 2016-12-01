@@ -3,6 +3,7 @@ package com.soy.replyrobot.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.log4j.Logger;
@@ -16,6 +17,8 @@ import com.soy.replyrobot.dao.CommandDao;
 import com.soy.replyrobot.model.Command;
 import com.soy.replyrobot.model.CommandContent;
 import com.soy.replyrobot.service.CommandService;
+import com.soy.replyrobot.util.Constants;
+import com.soy.replyrobot.util.StringUtils;
 
 @Service
 public class CommandServiceImpl implements CommandService {
@@ -69,6 +72,22 @@ public class CommandServiceImpl implements CommandService {
 		if(insertList.size()>0)commandContentDao.insertBatch(insertList);
 		if(existsIds.size()>0)commandContentDao.deleteBatch(existsIds);
 		return true;
+	}
+
+	@Override
+	public String autoReply(String name) {
+		if(StringUtils.isEmpty(name)){
+			return Constants.EMPTY_COMMAND_CONTENT;
+		}
+		Command command = commandDao.queryFullCommandByName(name);
+		if(command!=null){
+			List<CommandContent> contentList = command.getContentList();
+			if(contentList!=null && contentList.size()>0){
+				CommandContent content = contentList.get(new Random().nextInt(contentList.size()));
+				return content.getContent();
+			}
+		}
+		return Constants.NO_MATCHING_CONTENT;
 	}
 
 }

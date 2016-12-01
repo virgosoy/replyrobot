@@ -23,6 +23,14 @@ public interface CommandDao {
 	public Command queryFullCommandById(int id);
 	
 	/**
+	 * <p>根据指令获取指令全部内容</p>
+	 * @author zhengsiyou
+	 * @param command
+	 * @return 
+	 */
+	public Command queryFullCommandByName(String command);
+	
+	/**
 	 * <p>添加指令</p>
 	 * @author zhengsiyou
 	 * @param command
