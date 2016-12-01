@@ -79,12 +79,27 @@ public class CommandServiceImpl implements CommandService {
 		if(StringUtils.isEmpty(name)){
 			return Constants.EMPTY_COMMAND_CONTENT;
 		}
-		Command command = commandDao.queryFullCommandByName(name);
-		if(command!=null){
-			List<CommandContent> contentList = command.getContentList();
-			if(contentList!=null && contentList.size()>0){
-				CommandContent content = contentList.get(new Random().nextInt(contentList.size()));
-				return content.getContent();
+		if(Constants.HELP_COMMAND.equals(name)){
+			//如果是帮助指令
+			List<Command> commandList = commandDao.queryCommandList(null);
+			StringBuilder sb = new StringBuilder("帮助列表：");
+			for(Command command : commandList){
+				sb.append("<br>");
+				sb.append("输入[");
+				sb.append(command.getCommand());
+				sb.append("]查看");
+				sb.append(command.getDescription());
+			}
+			logger.debug(sb.toString());
+			return sb.toString();
+		}else{
+			Command command = commandDao.queryFullCommandByName(name);
+			if(command!=null){
+				List<CommandContent> contentList = command.getContentList();
+				if(contentList!=null && contentList.size()>0){
+					CommandContent content = contentList.get(new Random().nextInt(contentList.size()));
+					return content.getContent();
+				}
 			}
 		}
 		return Constants.NO_MATCHING_CONTENT;

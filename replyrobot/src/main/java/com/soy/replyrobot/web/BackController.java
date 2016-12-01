@@ -77,6 +77,7 @@ public class BackController {
 			if(contents.length==0){
 				contents = new String[]{""};
 			}
+			
 			//封装数据
 			CommandContent content = null;
 			for (int i = 0; i<contentIds.length; i++) {

@@ -186,6 +186,7 @@ a{blr:expression(this.onFocus=this.blur())}/*去掉a标签的虚线框，避免�
 
 /*讨论区*/
 .jp-container .talk_recordbox{
+	overflow:hidden;/*修复浮动导致高度异常*/
 	min-height:80px;
 	color: #afafaf;
 	padding-top: 5px;
@@ -238,6 +239,7 @@ a{blr:expression(this.onFocus=this.blur())}/*去掉a标签的虚线框，避免�
 }
 /*自己发言样式*/
 .jp-container .talk_recordboxme{
+	overflow:hidden;/*修复浮动导致高度异常*/
 	display:block;
 	min-height:80px;
 	color: #afafaf;	
