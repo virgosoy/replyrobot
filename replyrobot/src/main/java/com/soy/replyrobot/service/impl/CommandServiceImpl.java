@@ -90,9 +90,10 @@ public class CommandServiceImpl implements CommandService {
 				sb.append("]查看");
 				sb.append(command.getDescription());
 			}
-			logger.debug(sb.toString());
+			//输出帮助内容
 			return sb.toString();
 		}else{
+			//一般指令
 			Command command = commandDao.queryFullCommandByName(name);
 			if(command!=null){
 				List<CommandContent> contentList = command.getContentList();
@@ -103,6 +104,11 @@ public class CommandServiceImpl implements CommandService {
 			}
 		}
 		return Constants.NO_MATCHING_CONTENT;
+	}
+
+	@Override
+	public Command queryFullCommandByName(String command) {
+		return commandDao.queryFullCommandByName(command);
 	}
 
 }

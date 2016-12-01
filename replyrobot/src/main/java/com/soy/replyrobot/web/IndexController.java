@@ -10,4 +10,9 @@ public class IndexController {
 	public String index(){
 		return "index";
 	}
+	
+	@RequestMapping("/ajax")
+	public String ajax(){
+		return "front/ajax";
+	}
 }
