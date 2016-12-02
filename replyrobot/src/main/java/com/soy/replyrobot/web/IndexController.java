@@ -11,8 +11,23 @@ public class IndexController {
 		return "index";
 	}
 	
+	/**
+	 * <p>ajax测试json接口页面</p>
+	 * @author zhengsiyou
+	 * @return 
+	 */
 	@RequestMapping("/ajax")
 	public String ajax(){
 		return "front/ajax";
+	}
+	
+	/**
+	 * <p>地图</p>
+	 * @author zhengsiyou
+	 * @return 
+	 */
+	@RequestMapping("/map")
+	public String map(){
+		return "front/map";
 	}
 }
