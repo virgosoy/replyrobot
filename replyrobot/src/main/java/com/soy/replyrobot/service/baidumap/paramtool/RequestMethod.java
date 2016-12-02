@@ -1,4 +1,4 @@
-package com.soy.replyrobot.service.baidumap.tool;
+package com.soy.replyrobot.service.baidumap.paramtool;
 
 /**
  * <p>请求方法</p>

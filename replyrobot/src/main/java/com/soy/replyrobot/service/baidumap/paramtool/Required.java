@@ -1,4 +1,4 @@
-package com.soy.replyrobot.service.baidumap.param;
+package com.soy.replyrobot.service.baidumap.paramtool;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -14,6 +14,11 @@ import java.lang.annotation.Target;
 @Target({ElementType.FIELD,ElementType.METHOD})
 @Documented
 public @interface Required {
+	
+	/**
+	 * 表示字段未设定值
+	 */
+	public static final String EMPTY = "\0\0";
 	
 	/**
 	 * <p>是否必须</p>
@@ -37,6 +42,6 @@ public @interface Required {
 	 * @author zhengsiyou
 	 * @return 
 	 */
-	String[] relationValue() default "";
+	String[] relationValues() default "";
 	
 }

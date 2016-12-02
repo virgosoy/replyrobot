@@ -1,5 +1,7 @@
 package com.soy.replyrobot.service.baidumap.param;
 
+import com.soy.replyrobot.service.baidumap.paramtool.Required;
+
 public class HighacciplocParam extends BaiduApiParam {
 	
 	//待定位ip 可选
@@ -44,7 +46,7 @@ public class HighacciplocParam extends BaiduApiParam {
 	//	返回坐标类型	可选，
 	private Coord coord;
 	public static enum Coord{
-		MERCATOR("bd09"),BAIDU("bd09ll"),GCJ("gcj02");
+		BAIDU_MERCATOR("bd09"),BAIDU_LL("bd09ll"),GCJ_LL("gcj02");
 		//	bd09（默认）：百度墨卡托坐标
 		//	bd09ll：百度经纬度坐标
 		//	gcj02：国测局经纬度坐标
@@ -92,7 +94,7 @@ public class HighacciplocParam extends BaiduApiParam {
 	
 	//	jsonp回调函数	
 	// 当callback_type=jsonp时，必填，取值为开发者所设置回调函数名
-	@Required(relation="callback_type",relationValue="jsonp")
+	@Required(relation="callback_type",relationValues="jsonp")
 	private String callback;
 
 	
@@ -100,6 +102,11 @@ public class HighacciplocParam extends BaiduApiParam {
 		return qcip;
 	}
 
+	/**
+	 * <p>待定位IP</p>
+	 * @author zhengsiyou
+	 * @param qcip 
+	 */
 	public void setQcip(String qcip) {
 		this.qcip = qcip;
 	}
@@ -108,6 +115,11 @@ public class HighacciplocParam extends BaiduApiParam {
 		return qterm;
 	}
 
+	/**
+	 * <p>待定位终端类型	</p>
+	 * @author zhengsiyou
+	 * @param qterm 
+	 */
 	public void setQterm(Qterm qterm) {
 		this.qterm = qterm;
 	}
@@ -116,6 +128,10 @@ public class HighacciplocParam extends BaiduApiParam {
 		return extensions;
 	}
 
+	/**
+	 * <p>返回结果扩展设定</p>
+	 * @author zhengsiyou
+	 */
 	public void setExtensions(Extensions extensions) {
 		this.extensions = extensions;
 	}
@@ -124,6 +140,11 @@ public class HighacciplocParam extends BaiduApiParam {
 		return coord;
 	}
 
+	/**
+	 * <p>返回坐标类型</p>
+	 * @author zhengsiyou
+	 * @param coord 
+	 */
 	public void setCoord(Coord coord) {
 		this.coord = coord;
 	}
@@ -132,6 +153,11 @@ public class HighacciplocParam extends BaiduApiParam {
 		return coding;
 	}
 
+	/**
+	 * <p>返回结果编码类型</p>
+	 * @author zhengsiyou
+	 * @param coding 
+	 */
 	public void setCoding(Coding coding) {
 		this.coding = coding;
 	}
@@ -140,6 +166,11 @@ public class HighacciplocParam extends BaiduApiParam {
 		return callback_type;
 	}
 
+	/**
+	 * <p>回调方式选择</p>
+	 * @author zhengsiyou
+	 * @param callback_type 
+	 */
 	public void setCallback_type(CallbackType callback_type) {
 		this.callback_type = callback_type;
 	}
@@ -148,8 +179,18 @@ public class HighacciplocParam extends BaiduApiParam {
 		return callback;
 	}
 
+	/**
+	 * <p>jsonp回调函数</p>
+	 * @author zhengsiyou
+	 * @param callback 
+	 */
 	public void setCallback(String callback) {
 		this.callback = callback;
+	}
+
+	@Override
+	public String apiUrl() {
+		return "http://api.map.baidu.com/highacciploc/v1";
 	}
 	
 }

@@ -1,4 +1,4 @@
-package com.soy.replyrobot.service.baidumap.tool;
+package com.soy.replyrobot.service.baidumap.paramtool;
 
 /**
  * @author zhengsiyou
@@ -12,8 +12,8 @@ public final class ParseParamToolFactory {
 		return new DefaultParseParamTool();
 	}
 	
-	public static ParseParamTool create(String ak){
-		return new DefaultParseParamTool(ak);
+	public static ParseParamTool createIgnoreTest(){
+		return new IgnoreTestParseParamTool();
 	}
 	
 }

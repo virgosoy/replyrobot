@@ -1,43 +1,59 @@
-package com.soy.replyrobot.service.baidumap.tool;
+package com.soy.replyrobot.service.baidumap.paramtool;
 
 import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.soy.replyrobot.service.baidumap.exception.BaiduApiException;
 import com.soy.replyrobot.service.baidumap.param.BaiduApiParam;
-import com.soy.replyrobot.service.baidumap.param.Required;
 
-public class DefaultParseParamTool implements ParseParamTool {
+/**
+ * <p>抽象基类</p>
+ * @author zhengsiyou
+ * @data 2016年12月2日-下午5:58:45
+ * @version 0.1
+ */
+//模版方法模式
+public abstract class AbstractDefaultParseParamTool implements ParseParamTool {
 	
 	/**
 	 * 开发者密钥
 	 * @since
 	 */
 	private String ak;
-	public DefaultParseParamTool(){};
-	public DefaultParseParamTool(String ak){
-		this.ak = ak;
-	};
 	
 	@Override
-	public String parse(BaiduApiParam param) {
+	//模版方法
+	public final String parse(BaiduApiParam param) {
 		try {
+			//内省JavaBean获得参数列表
 			Map<String,String> map = introspector(param);
-			testRequired(param,map);
-			return dealStringParam(map);
+			//检测必须参数
+			if(isTestRequired()){
+				testRequired(param,map);
+			}
+			//处理参数列表变成url参数字符串
+			String result = dealStringParam(map);
+			return result;
 		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
+			throw new BaiduApiException("解析参数时出现错误",e);
 		}
+	}
+	
+	/**
+	 * <p>钩子函数，是否执行检测</p>
+	 * @author zhengsiyou
+	 * @return 
+	 */
+	protected boolean isTestRequired(){
+		return true;
 	}
 	
 	/**
@@ -48,7 +64,7 @@ public class DefaultParseParamTool implements ParseParamTool {
 	 * @return 
 	 * @throws Exception 
 	 */
-	private Map<String,String> introspector(BaiduApiParam param) throws Exception{
+	protected Map<String,String> introspector(BaiduApiParam param) throws Exception{
 		Class<? extends BaiduApiParam> clazz = param.getClass();
 		
 		//参数列表
@@ -89,7 +105,7 @@ public class DefaultParseParamTool implements ParseParamTool {
 	 * @return 
 	 * @throws UnsupportedEncodingException 
 	 */
-	private String dealStringParam(Map<String,String> map) throws UnsupportedEncodingException{
+	protected String dealStringParam(Map<String,String> map) throws UnsupportedEncodingException{
 		StringBuilder sb = new StringBuilder(); //存储拼接字符串
 		//拼接结果
 		for (Entry<String, String> e : map.entrySet()) {
@@ -113,7 +129,7 @@ public class DefaultParseParamTool implements ParseParamTool {
 	 * @param map
 	 * @return 
 	 */
-	private void testRequired(BaiduApiParam param,Map<String,String> map){
+	protected void testRequired(BaiduApiParam param,Map<String,String> map){
 		Class<? extends BaiduApiParam> clazz = param.getClass();
 		
 		for (Field field : clazz.getDeclaredFields()) {
@@ -122,15 +138,23 @@ public class DefaultParseParamTool implements ParseParamTool {
 			field.setAccessible(true);
 			Required required = field.getAnnotation(Required.class);
 			if(required!=null){ //如果有@Required注解 
-				if(!required.relation().equals("")){ //如果有设置relation元素
+				String relationProp = required.relation();
+				if(!relationProp.equals("")){ //如果有设置relation元素
 					//获取对应的值
-					String targetValue = map.get(required.relation());
-					
-					for(String sourceValue : required.relationValue()){
+					String targetValue = map.get(relationProp); //无值会取得null
+					//如果无值
+					if(targetValue==null){
+						targetValue = Required.EMPTY;
+					}
+					for(String sourceValue : required.relationValues()){
 						if(sourceValue.equals(targetValue)){ //如果值符合
 							//那么要求被注解元素要有值
 							if(map.get(property)==null){
-								throw new IllegalArgumentException(property+"属性不能为null");
+								if(targetValue!=Required.EMPTY){
+									throw new IllegalArgumentException("当"+relationProp+"属性="+targetValue+"时，"+property+"属性不能为null");
+								}else{
+									throw new IllegalArgumentException(relationProp+" / "+property+" 属性不能为null");
+								}
 							}
 						}
 					}
@@ -141,5 +165,10 @@ public class DefaultParseParamTool implements ParseParamTool {
 				}
 			}
 		}
+	}
+	
+	@Override
+	public void setAk(String ak) {
+		this.ak = ak;
 	}
 }
