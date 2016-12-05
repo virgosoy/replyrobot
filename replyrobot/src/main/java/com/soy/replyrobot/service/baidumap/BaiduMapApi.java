@@ -1,5 +1,7 @@
 package com.soy.replyrobot.service.baidumap;
 
+import java.util.Map;
+
 import com.soy.replyrobot.service.baidumap.param.GeocoderParam;
 import com.soy.replyrobot.service.baidumap.param.HighacciplocParam;
 
@@ -19,4 +21,22 @@ public interface BaiduMapApi {
 	 * @return 
 	 */
 	String geocoder(GeocoderParam param);
+	
+	
+	/**
+	 * <p>执行web api</p>
+	 * @author zhengsiyou
+	 * @param fullUrl
+	 * @return
+	 */
+	String execute(String fullUrl);
+	
+	/**
+	 * <p>执行web api</p>
+	 * @author zhengsiyou
+	 * @param apiUrl
+	 * @param params
+	 * @return 
+	 */
+	String execute(String apiUrl,Map<String,Object> params);
 }

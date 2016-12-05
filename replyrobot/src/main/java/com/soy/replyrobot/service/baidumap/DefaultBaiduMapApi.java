@@ -1,6 +1,7 @@
 package com.soy.replyrobot.service.baidumap;
 
 import java.io.IOException;
+import java.util.Map;
 
 import com.soy.replyrobot.service.baidumap.exception.BaiduApiException;
 import com.soy.replyrobot.service.baidumap.param.BaiduApiParam;
@@ -10,6 +11,7 @@ import com.soy.replyrobot.service.baidumap.paramtool.ParseParamTool;
 import com.soy.replyrobot.service.baidumap.paramtool.ParseParamToolFactory;
 import com.soy.replyrobot.service.baidumap.tool.DefaultHttpTool;
 import com.soy.replyrobot.service.baidumap.tool.HttpTool;
+import com.soy.replyrobot.util.HttpUtils;
 
 public class DefaultBaiduMapApi implements BaiduMapApi {
 	
@@ -39,12 +41,12 @@ public class DefaultBaiduMapApi implements BaiduMapApi {
 	
 	@Override
 	public String highacciploc(HighacciplocParam param) {
-		return execute(param);
+		return executeUrl(param);
 	}
 	
 	@Override
 	public String geocoder(GeocoderParam param) {
-		return execute(param);
+		return executeUrl(param);
 	}
 	
 	/**
@@ -53,7 +55,7 @@ public class DefaultBaiduMapApi implements BaiduMapApi {
 	 * @param param
 	 * @return 
 	 */
-	private String execute(BaiduApiParam param){
+	private String executeUrl(BaiduApiParam param){
 		try {
 			String url = getFullUrl(param);
 			System.err.format("url请求地址：%s\n", url);
@@ -79,6 +81,32 @@ public class DefaultBaiduMapApi implements BaiduMapApi {
 			sb.append(paramStr);
 		}
 		return sb.toString();
+	}
+
+
+	@Override
+	public String execute(String fullUrl) {
+		System.err.format("url请求地址：%s\n", fullUrl);
+		try {
+			return httpTool.connect(fullUrl);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+
+	@Override
+	public String execute(String apiUrl, Map<String, Object> params) {
+		apiUrl = HttpUtils.setParam("ak", ak, apiUrl, false);
+		String url = HttpUtils.setParams(params, apiUrl);
+		System.err.format("url请求地址：%s\n", url);
+		try {
+			return httpTool.connect(url);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 

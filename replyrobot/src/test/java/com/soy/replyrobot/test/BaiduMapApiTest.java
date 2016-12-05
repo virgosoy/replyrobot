@@ -1,6 +1,8 @@
 package com.soy.replyrobot.test;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.Test;
 
@@ -58,7 +60,8 @@ public class BaiduMapApiTest {
 		System.out.println(baiduMapApi.geocoder(geocoderParam));
 	}
 	
-	@Test
+//	@Test
+	//定位测试
 	public void test4(){
 		BaiduMapApi baiduMapApi = new DefaultBaiduMapApi(ak);
 		HighacciplocParam highacciplocParam = new HighacciplocParam();
@@ -86,6 +89,36 @@ public class BaiduMapApiTest {
 		if(json.getIntValue("status")==0){
 			System.out.println(json.getJSONObject("result").getString("formatted_address"));
 		}
+	}
+	
+	@Test
+	//定位测试,baiduMapApi.execute方式。
+	public void test5(){
+		BaiduMapApi baiduMapApi = new DefaultBaiduMapApi(ak);
+		Map<String,Object> params = new HashMap<>();
+		params.put("qterm", "pc");
+		params.put("qcip", "101.233.119.4");
+		params.put("coord", "bd09ll");
+		String jsonString = baiduMapApi.execute("http://api.map.baidu.com/highacciploc/v1", params);
 		
+		JSONObject json = JSON.parseObject(jsonString);
+		Location location = null;
+		if(json.getJSONObject("result").getIntValue("error")==161){
+			//定位成功
+			//获取位置
+			location = json.getJSONObject("content").getObject("location", Location.class);
+		}else{
+			System.err.println("定位失败");
+			return;
+		}
+		params = new HashMap<>();
+		params.put("output", "json");
+		params.put("location", location);
+		jsonString = baiduMapApi.execute("http://api.map.baidu.com/geocoder/v2/", params);
+		System.out.println(jsonString);
+		json = JSON.parseObject(jsonString);
+		if(json.getIntValue("status")==0){
+			System.out.println(json.getJSONObject("result").getString("formatted_address"));
+		}
 	}
 }
