@@ -1,13 +1,16 @@
-package com.soy.replyrobot.service.baidumap;
+package com.soy.replyrobot.test;
 
 import java.io.IOException;
 
 import org.junit.Test;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.soy.replyrobot.service.baidumap.BaiduMapApi;
+import com.soy.replyrobot.service.baidumap.DefaultBaiduMapApi;
 import com.soy.replyrobot.service.baidumap.param.GeocoderParam;
 import com.soy.replyrobot.service.baidumap.param.GeocoderParam.Output;
 import com.soy.replyrobot.service.baidumap.param.HighacciplocParam;
-import com.soy.replyrobot.service.baidumap.param.HighacciplocParam.CallbackType;
 import com.soy.replyrobot.service.baidumap.param.HighacciplocParam.Coding;
 import com.soy.replyrobot.service.baidumap.param.HighacciplocParam.Coord;
 import com.soy.replyrobot.service.baidumap.param.HighacciplocParam.Qterm;
@@ -17,7 +20,7 @@ import com.soy.replyrobot.service.baidumap.paramtool.ParseParamToolFactory;
 import com.soy.replyrobot.service.baidumap.tool.DefaultHttpTool;
 import com.soy.replyrobot.service.baidumap.tool.HttpTool;
 
-public class TestClass {
+public class BaiduMapApiTest {
 	static String ak = "RiiKh6SjFTWsF3aQ5T1Nk4bDADyRE6aI";
 
 //	@Test
@@ -38,7 +41,8 @@ public class TestClass {
 		System.out.println(str);
 	}
 
-	@Test
+//	@Test
+	//百度API基本测试
 	public void test3(){
 		BaiduMapApi baiduMapApi = new DefaultBaiduMapApi(ak);
 		HighacciplocParam highacciplocParam = new HighacciplocParam();
@@ -52,5 +56,36 @@ public class TestClass {
 		geocoderParam.setLocation(new Location(22.754772,113.847417));
 		System.out.println(new Location(39.983424,116.322987));
 		System.out.println(baiduMapApi.geocoder(geocoderParam));
+	}
+	
+	@Test
+	public void test4(){
+		BaiduMapApi baiduMapApi = new DefaultBaiduMapApi(ak);
+		HighacciplocParam highacciplocParam = new HighacciplocParam();
+		highacciplocParam.setQterm(Qterm.PC);
+		highacciplocParam.setQcip("115.174.80.130");
+		highacciplocParam.setCoord(Coord.BAIDU_LL);
+		String jsonString = baiduMapApi.highacciploc(highacciplocParam);
+		
+		JSONObject json = JSON.parseObject(jsonString);
+		Location location = null;
+		if(json.getJSONObject("result").getIntValue("error")==161){
+			//定位成功
+			//获取位置
+			location = json.getJSONObject("content").getObject("location", Location.class);
+		}else{
+			System.err.println("定位失败");
+			return;
+		}
+		GeocoderParam geocoderParam = new GeocoderParam();
+		geocoderParam.setOutput(Output.JSON);
+		geocoderParam.setLocation(location);
+		jsonString = baiduMapApi.geocoder(geocoderParam);
+		System.out.println(jsonString);
+		json = JSON.parseObject(jsonString);
+		if(json.getIntValue("status")==0){
+			System.out.println(json.getJSONObject("result").getString("formatted_address"));
+		}
+		
 	}
 }

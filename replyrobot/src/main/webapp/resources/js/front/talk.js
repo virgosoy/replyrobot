@@ -17,6 +17,9 @@ $(function(){
 			send();
 		}
 	})
+	//初始化执行
+	var msg = "客官，请问您需要什么服务？<br>回复[帮助]可以查看帮助列表。"
+	appendDialog(COMPUTER_CLASS_NAME,"公众号",msg);
 });
 
 /**

@@ -12,18 +12,18 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.soy.replyrobot.dao.CommandContentDao;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:applicationContext.xml")
+//@RunWith(SpringJUnit4ClassRunner.class)
+//@ContextConfiguration("classpath:applicationContext.xml")
 public class TestClass {
 	
-	@Autowired
-	private CommandContentDao commandContentDao;
-	@Test
-	public void test1(){
-		boolean b = commandContentDao.existsById(1);
-		System.out.println(b);
-		Assert.assertEquals(true, b);
-	}
+//	@Autowired
+//	private CommandContentDao commandContentDao;
+//	@Test
+//	public void test1(){
+//		boolean b = commandContentDao.existsById(1);
+//		System.out.println(b);
+//		Assert.assertEquals(true, b);
+//	}
 	
 	@Test
 	public void test2(){

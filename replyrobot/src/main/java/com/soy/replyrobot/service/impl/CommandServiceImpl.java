@@ -1,8 +1,10 @@
 package com.soy.replyrobot.service.impl;
 
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Random;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -17,6 +19,7 @@ import com.soy.replyrobot.dao.CommandDao;
 import com.soy.replyrobot.model.Command;
 import com.soy.replyrobot.model.CommandContent;
 import com.soy.replyrobot.service.CommandService;
+import com.soy.replyrobot.service.logic.CommandMethod;
 import com.soy.replyrobot.util.Constants;
 import com.soy.replyrobot.util.StringUtils;
 
@@ -28,6 +31,8 @@ public class CommandServiceImpl implements CommandService {
 	private CommandDao commandDao;
 	@Autowired
 	private CommandContentDao commandContentDao;
+	@Autowired
+	private CommandMethod commandMethod;
 	
 	@Override
 	public List<Command> queryCommandList(Command command) {
@@ -90,8 +95,21 @@ public class CommandServiceImpl implements CommandService {
 				sb.append("]查看");
 				sb.append(command.getDescription());
 			}
+			for(Entry<String, String> entry : CommandMethod.methodDescriptionMap.entrySet()){
+				sb.append("<br>");
+				sb.append("输入[");
+				sb.append(entry.getKey());
+				sb.append("]查看");
+				sb.append(entry.getValue());
+			}
 			//输出帮助内容
 			return sb.toString();
+		}else if(CommandMethod.methodMap.containsKey(name)){ //如果指令绑定了方法
+			try {
+				return (String) CommandMethod.methodMap.get(name).invoke(commandMethod);
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+				e.printStackTrace();
+			}
 		}else{
 			//一般指令
 			Command command = commandDao.queryFullCommandByName(name);
