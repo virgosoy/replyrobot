@@ -25,5 +25,5 @@ WebService 客户端Java代码所在路径：\replyrobot\src\test\java\com\soy\r
 
 对百度地图API进行了封装，可以方便的调用百度地图的web api。
 
-
-
+* API对部分方法与参数进行了封装，同时也提供用Map和百度地图的web api的url的方法执行指定的api。
+* 发送http请求的模块是面向接口编程的，如果需要用自己编写的代码或第三方工具发送http请求，只需编写适配器符合接口，然后实例化时指定为此适配器即可。
