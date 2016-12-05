@@ -16,6 +16,13 @@ public final class Constants {
 	 */
 	public static final String NO_MATCHING_CONTENT = "客官，你没按套路出牌……我听不懂你在说什么哎！输入【"+HELP_COMMAND+"】可查看帮助列表";
 	
+	
+	/**
+	 * 匹配到指令但没有回复结果时发送的内容
+	 * @since
+	 */
+	public static final String NO_REPLY_CONTENT = "。。。好吧，这条指令无回复内容。";
+	
 	/**
 	 * 空指令
 	 * @since

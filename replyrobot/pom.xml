@@ -171,6 +171,7 @@
   			<directory>src/main/resources</directory>
   		</resource>
   	</resources>
+  	<finalName>replyrobot</finalName>
   </build>
   
   

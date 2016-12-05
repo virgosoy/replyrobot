@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alibaba.druid.support.logging.Log;
 import com.soy.replyrobot.dao.CommandContentDao;
 import com.soy.replyrobot.dao.CommandDao;
 import com.soy.replyrobot.model.Command;
@@ -113,11 +112,13 @@ public class CommandServiceImpl implements CommandService {
 		}else{
 			//一般指令
 			Command command = commandDao.queryFullCommandByName(name);
-			if(command!=null){
+			if(command!=null){ //返回结果不为null表示有对应的指令
 				List<CommandContent> contentList = command.getContentList();
-				if(contentList!=null && contentList.size()>0){
+				if(contentList!=null && contentList.size()>0){ //如果指令有回复结果
 					CommandContent content = contentList.get(new Random().nextInt(contentList.size()));
 					return content.getContent();
+				}else{
+					return Constants.NO_REPLY_CONTENT;
 				}
 			}
 		}
