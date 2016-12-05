@@ -8,5 +8,7 @@
 
 json接口测试页面： http://localhost/replyrobot/ajax
 
+前台地图测试页面：http://localhost/replyrobot/map
+
 ## WebService
 WebService 客户端Java代码所在路径：\replyrobot\src\test\java\com\soy\replyrobot\ws\client
